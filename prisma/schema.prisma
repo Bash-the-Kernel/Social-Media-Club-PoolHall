@@ -1,0 +1,65 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  email     String    @unique
+  password  String
+  profile   Profile?
+  posts     Post[]
+  followers Follow[]  @relation("UserFollows")
+  following Follow[]  @relation("UserIsFollowed")
+}
+
+model Profile {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  user      User   @relation(fields: [userId], references: [id])
+  bio       String?
+  location  String?
+  avatarUrl String?
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  likes     Like[]
+  comments  Comment[]
+  createdAt DateTime @default(now())
+}
+
+model Follow {
+  id          Int  @id @default(autoincrement())
+  followerId  Int
+  followedId  Int
+  follower    User @relation("UserFollows", fields: [followerId], references: [id])
+  followed    User @relation("UserIsFollowed", fields: [followedId], references: [id])
+  status      String // 'pending', 'accepted'
+}
+
+model Like {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  postId Int
+  user   User @relation(fields: [userId], references: [id])
+  post   Post @relation(fields: [postId], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  userId    Int
+  postId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+}
