@@ -1,65 +1,95 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+// prisma/schema.prisma
 
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model User {
-  id        Int       @id @default(autoincrement())
-  username  String    @unique
-  email     String    @unique
-  password  String
-  profile   Profile?
-  posts     Post[]
-  followers Follow[]  @relation("UserFollows")
-  following Follow[]  @relation("UserIsFollowed")
+  id             Int       @id @default(autoincrement())
+  username       String    @unique
+  email          String    @unique
+  password       String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  // Relations
+  profile        Profile?
+  posts          Post[]
+  likes          Like[]
+  comments       Comment[]
+  followedBy     Follow[]  @relation("UserFollows")
+  following      Follow[]  @relation("UserIsFollowed")
 }
 
 model Profile {
-  id        Int    @id @default(autoincrement())
-  userId    Int    @unique
-  user      User   @relation(fields: [userId], references: [id])
-  bio       String?
-  location  String?
-  avatarUrl String?
+  id             Int       @id @default(autoincrement())
+  bio            String?
+  location       String?
+  avatarUrl      String?   // For profile picture URL (Gravatar or uploaded)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  // Relations
+  userId         Int       @unique
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
-  content   String
-  userId    Int
-  user      User      @relation(fields: [userId], references: [id])
-  likes     Like[]
-  comments  Comment[]
-  createdAt DateTime @default(now())
+  id             Int       @id @default(autoincrement())
+  content        String
+  imageUrl       String?   // For post images (optional)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  // Relations
+  userId         Int
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes          Like[]
+  comments       Comment[]
 }
 
 model Follow {
-  id          Int  @id @default(autoincrement())
-  followerId  Int
-  followedId  Int
-  follower    User @relation("UserFollows", fields: [followerId], references: [id])
-  followed    User @relation("UserIsFollowed", fields: [followedId], references: [id])
-  status      String // 'pending', 'accepted'
+  id             Int       @id @default(autoincrement())
+  status         String    @default("pending") // "pending" or "accepted"
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  // Relations
+  followerId     Int
+  followedId     Int
+  follower       User      @relation("UserFollows", fields: [followerId], references: [id], onDelete: Cascade)
+  followed       User      @relation("UserIsFollowed", fields: [followedId], references: [id], onDelete: Cascade)
+  
+  @@unique([followerId, followedId]) // Prevent duplicate follow relationships
 }
 
 model Like {
-  id     Int  @id @default(autoincrement())
-  userId Int
-  postId Int
-  user   User @relation(fields: [userId], references: [id])
-  post   Post @relation(fields: [postId], references: [id])
+  id             Int       @id @default(autoincrement())
+  createdAt      DateTime  @default(now())
+  
+  // Relations
+  userId         Int
+  postId         Int
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post           Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, postId]) // User can like a post only once
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  userId    Int
-  postId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  post      Post     @relation(fields: [postId], references: [id])
-  createdAt DateTime @default(now())
+  id             Int       @id @default(autoincrement())
+  content        String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  // Relations
+  userId         Int
+  postId         Int
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post           Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
