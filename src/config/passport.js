@@ -1,4 +1,3 @@
-// src/config/passport.js
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const { PrismaClient } = require('@prisma/client');

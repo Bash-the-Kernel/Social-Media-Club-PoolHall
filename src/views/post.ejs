@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Details</title>
+</head>
+<body>
+  <h1>Post by <%= post.user.username %></h1>
+  <p><%= post.content %></p>
+  <% if (post.imageUrl) { %>
+    <img src="<%= post.imageUrl %>" alt="Post Image">
+  <% } %>
+  <p>Likes: <%= post._count.likes %> | Comments: <%= post._count.comments %></p>
+
+  <h2>Comments</h2>
+  <% if (post.comments.length > 0) { %>
+    <% post.comments.forEach(comment => { %>
+      <div>
+        <p><strong><%= comment.user.username %>:</strong> <%= comment.content %></p>
+      </div>
+    <% }); %>
+  <% } else { %>
+    <p>No comments yet.</p>
+  <% } %>
+
+  <a href="/feed">Back to Feed</a>
+</body>
+</html>
