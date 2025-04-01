@@ -2,56 +2,40 @@
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
-
 // Create a comment
 const createComment = async (req, res) => {
   try {
     const { postId, content } = req.body;
     const userId = req.user.id;
-    
+
     // Validate input
     if (!postId || !content) {
       return res.status(400).json({ message: 'Post ID and content are required' });
     }
-    
+
     // Check if post exists
     const post = await prisma.post.findUnique({
       where: { id: Number(postId) }
     });
-    
+
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
-    
+
     // Create comment
-    const comment = await prisma.comment.create({
+    await prisma.comment.create({
       data: {
         content,
         userId,
         postId: Number(postId)
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            profile: {
-              select: {
-                avatarUrl: true
-              }
-            }
-          }
-        }
       }
     });
-    
-    return res.status(201).json({
-      message: 'Comment created successfully',
-      comment
-    });
+
+    // Redirect back to the feed page
+    res.redirect('/feed');
   } catch (error) {
     console.error('Error creating comment:', error);
-    return res.status(500).json({ message: 'Server error' });
+    res.status(500).render('error', { message: 'Error creating comment' });
   }
 };
 

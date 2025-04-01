@@ -3,26 +3,27 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-// Like a post
 const likePost = async (req, res) => {
   try {
     const { postId } = req.body;
     const userId = req.user.id;
-    
+
     // Validate input
     if (!postId) {
-      return res.status(400).json({ message: 'Post ID is required' });
+      req.flash('error', 'Post ID is required');
+      return res.redirect('/feed');
     }
-    
+
     // Check if post exists
     const post = await prisma.post.findUnique({
       where: { id: Number(postId) }
     });
-    
+
     if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
+      req.flash('error', 'Post not found');
+      return res.redirect('/feed');
     }
-    
+
     // Check if already liked
     const existingLike = await prisma.like.findUnique({
       where: {
@@ -32,26 +33,25 @@ const likePost = async (req, res) => {
         }
       }
     });
-    
+
     if (existingLike) {
-      return res.status(400).json({ message: 'Post already liked' });
+      req.flash('error', 'Post already liked');
+      return res.redirect('/feed');
     }
-    
+
     // Create like
-    const like = await prisma.like.create({
+    await prisma.like.create({
       data: {
         userId,
         postId: Number(postId)
       }
     });
-    
-    return res.status(201).json({
-      message: 'Post liked successfully',
-      like
-    });
+
+    req.flash('success', 'Post liked successfully');
+    res.redirect('/feed');
   } catch (error) {
     console.error('Error liking post:', error);
-    return res.status(500).json({ message: 'Server error' });
+    res.status(500).render('error', { message: 'Error liking post' });
   }
 };
 
@@ -60,7 +60,7 @@ const unlikePost = async (req, res) => {
   try {
     const { postId } = req.params;
     const userId = req.user.id;
-    
+
     // Find the like
     const like = await prisma.like.findUnique({
       where: {
@@ -70,11 +70,12 @@ const unlikePost = async (req, res) => {
         }
       }
     });
-    
+
     if (!like) {
-      return res.status(404).json({ message: 'Like not found' });
+      req.flash('error', 'Like not found');
+      return res.redirect('/feed');
     }
-    
+
     // Delete the like
     await prisma.like.delete({
       where: {
@@ -84,11 +85,12 @@ const unlikePost = async (req, res) => {
         }
       }
     });
-    
-    return res.json({ message: 'Post unliked successfully' });
+
+    req.flash('success', 'Post unliked successfully');
+    res.redirect('/feed');
   } catch (error) {
     console.error('Error unliking post:', error);
-    return res.status(500).json({ message: 'Server error' });
+    res.status(500).render('error', { message: 'Error unliking post' });
   }
 };
 

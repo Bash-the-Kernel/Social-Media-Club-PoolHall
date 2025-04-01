@@ -14,6 +14,11 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const flash = require('connect-flash');
+const methodOverride = require('method-override');
+
+// Enable method override for forms
+app.use(methodOverride('_method'));
+app.use(express.static('public'));
 
 
 // Set EJS as the view engine
@@ -135,7 +140,6 @@ app.post('/profile', async (req, res) => {
     res.status(500).render('error', { message: 'Error updating profile' });
   }
 });
-
 app.get('/feed', async (req, res) => {
   if (!req.isAuthenticated()) {
     return res.redirect('/login');
@@ -154,6 +158,21 @@ app.get('/feed', async (req, res) => {
               }
             }
           }
+        },
+        comments: {
+          include: {
+            user: {
+              select: {
+                username: true,
+                profile: {
+                  select: {
+                    avatarUrl: true
+                  }
+                }
+              }
+            }
+          },
+          orderBy: { createdAt: 'desc' }
         },
         _count: {
           select: {

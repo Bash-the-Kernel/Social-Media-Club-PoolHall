@@ -4,28 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile</title>
+<link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+<nav>
+    <a href="/feed">Feed</a>
+    <a href="/api/auth/logout">Logout</a>
+  </nav>
+  <div class="profile">
+    <img src="<%= user.profile.avatarUrl || '/default-avatar.png' %>" alt="Profile Picture">
   <h1>Welcome, <%= user.username %>!</h1>
   <p>Email: <%= user.email %></p>
   <p>Bio: <%= user.profile.bio || "No bio available" %></p>
   <p>Location: <%= user.profile.location || "No location available" %></p>
-  <img src="<%= user.profile.avatarUrl || '/default-avatar.png' %>" alt="Profile Picture">
-  <br>
-
-  <!-- Form to Edit Profile -->
-  <h2>Edit Profile</h2>
+  
+    <h2>Edit Profile</h2>
   <form action="/profile" method="post">
     <label for="bio">Bio:</label>
     <textarea id="bio" name="bio"><%= user.profile.bio %></textarea>
-    <br>
-    <label for="location">Location:</label>
+        <label for="location">Location:</label>
     <input type="text" id="location" name="location" value="<%= user.profile.location %>">
-    <br>
-    <label for="avatarUrl">Avatar URL:</label>
+        <label for="avatarUrl">Avatar URL:</label>
     <input type="text" id="avatarUrl" name="avatarUrl" value="<%= user.profile.avatarUrl %>">
-    <br>
-    <button type="submit">Save Changes</button>
+        <button type="submit">Save Changes</button>
   </form>
 
   <br>
