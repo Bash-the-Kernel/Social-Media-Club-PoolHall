@@ -1,122 +1,368 @@
-/* General Styles */
+/* Modern Social Media CSS - Mobile-first Approach */
+:root {
+  --primary-color: #4a7bff;
+  --primary-hover: #3562d8;
+  --text-color: #333;
+  --text-light: #757575;
+  --bg-color: #f8f9fa;
+  --card-bg: #ffffff;
+  --border-color: #e6e6e6;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f9;
-    color: #333;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+h1, h2, h3 {
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.75rem;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* Modern Button Styles */
+button, .btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+button:hover, .btn:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+button:active, .btn:active {
+  transform: translateY(0);
+}
+
+.btn-text {
+  background: transparent;
+  color: var(--primary-color);
+  padding: 0.5rem 0.75rem;
+}
+
+.btn-text:hover {
+  background-color: rgba(74, 123, 255, 0.1);
+  transform: none;
+}
+
+/* Navigation */
+nav {
+  background-color: var(--card-bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-color);
+  font-weight: 500;
+  position: relative;
+  padding: 0.5rem;
+}
+
+.nav-links a:hover::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary-color);
+  bottom: 0;
+  left: 0;
+}
+
+/* Layout Containers */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+}
+
+/* Form Styles */
+form {
+  margin: 1.5rem 0;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+form input, 
+form textarea, 
+form select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--card-bg);
+  transition: var(--transition);
+}
+
+form input:focus, 
+form textarea:focus, 
+form select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(74, 123, 255, 0.2);
+}
+
+form button {
+  margin-top: 0.5rem;
+}
+
+/* Post Styles */
+.post {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: var(--transition);
+}
+
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.post-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.post-meta {
+  flex: 1;
+}
+
+.post-author {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.post-time {
+  font-size: 0.875rem;
+  color: var(--text-light);
+}
+
+.post-content {
+  margin-bottom: 1rem;
+}
+
+.post img {
+  width: 100%;
+  border-radius: var(--border-radius);
+  margin: 0.75rem 0;
+}
+
+.post-actions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--border-radius);
+  background: transparent;
+  color: var(--text-light);
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.action-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-color);
+}
+
+.post-comments {
+  margin-top: 1.25rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.25rem;
+}
+
+.comment {
+  padding: 0.75rem 0;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.comment-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment-content {
+  flex: 1;
+  background-color: var(--bg-color);
+  padding: 0.75rem;
+  border-radius: var(--border-radius);
+}
+
+.comment-author {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* Profile Styles */
+.profile {
+  max-width: 800px;
+  margin: 2rem auto;
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.profile-cover {
+  height: 200px;
+  background-color: var(--primary-color);
+  position: relative;
+}
+
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 4px solid var(--card-bg);
+  position: absolute;
+  bottom: -75px;
+  left: 2rem;
+  object-fit: cover;
+}
+
+.profile-info {
+  padding: 5rem 2rem 2rem;
+}
+
+.profile-name {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.profile-bio {
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--text-light);
+}
+
+/* Media Queries for Responsive Design */
+@media (min-width: 768px) {
+  .content-grid {
+    grid-template-columns: 1fr 2fr;
   }
   
-  h1, h2, h3 {
-    color: #444;
-  }
-  
-  a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Navigation */
   nav {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 0.75rem 2rem;
   }
   
-  nav a {
-    color: white;
-    margin: 0 10px;
-    font-weight: bold;
+  .profile-cover {
+    height: 300px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr 2fr 1fr;
   }
   
-  /* Form Styles */
-  form {
-    margin: 20px 0;
-  }
-  
-  form input, form textarea, form button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  form button {
-    width: auto;
-  }
-  
-  /* Post Styles */
   .post {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin: 20px 0;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
   }
-  
-  .post img {
-    max-width: 100%;
-    border-radius: 5px;
-    margin: 10px 0;
-  }
-  
-  .post .actions {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .post .comments {
-    margin-top: 20px;
-  }
-  
-  .comment {
-    border-top: 1px solid #ddd;
-    padding: 10px 0;
-  }
-  
-  /* Profile Styles */
-  .profile {
-    max-width: 600px;
-    margin: 20px auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .profile img {
-    max-width: 150px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-  }
-  
-  .profile h1 {
-    margin-bottom: 10px;
-  }
-  
-  .profile p {
-    margin: 5px 0;
-  }
+}

@@ -5,13 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body {
+      background: url('/images/background-pattern.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
+
+    .login-container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      color: #333;
+    }
+
+    .login-container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #4a7bff;
+    }
+
+    .oauth-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .oauth-buttons a {
+      text-align: center;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+    }
+
+    .oauth-buttons .github {
+      background-color: #333;
+    }
+
+    .oauth-buttons .google {
+      background-color: #db4437;
+    }
+
+    .oauth-buttons .discord {
+      background-color: #5865f2;
+    }
+
+    .oauth-buttons a:hover {
+      opacity: 0.9;
+    }
+
+    .create-account {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .create-account a {
+      color: #4a7bff;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <nav>
-    <a href="/">Home</a>
-  </nav>
-  <div class="profile">
-    <h1>Login</h1>
+  <div class="login-container">
+    <h1>Login to Social Media</h1>
     <form action="/api/auth/login" method="post">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required>
@@ -19,6 +81,15 @@
       <input type="password" id="password" name="password" required>
       <button type="submit">Login</button>
     </form>
+
+    <div class="oauth-buttons">
+      <a href="/api/auth/github" class="github">Login with GitHub</a>
+      <a href="/api/auth/google" class="google">Login with Google</a>
+    </div>
+
+    <div class="create-account">
+      <p>Don't have an account? <a href="/register">Create account</a></p>
+    </div>
   </div>
 </body>
 </html>
