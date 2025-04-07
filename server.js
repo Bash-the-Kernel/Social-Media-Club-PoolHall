@@ -16,6 +16,37 @@ const PORT = process.env.PORT || 3000;
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
 
+const multer = require('multer');
+const path = require('path');
+app.use('/uploads', express.static('public/uploads'));
+// Configure multer storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads'); // Save files to the 'public/uploads' directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+
+const upload = multer({ storage });
+
+const fs = require('fs');
+
+const uploadDir = path.join(__dirname, 'public/uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Add an upload route
+app.post('/api/uploads', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+  const imageUrl = `/uploads/${req.file.filename}`;
+  res.json({ imageUrl });
+});
+
 // Enable method override for forms
 app.use(methodOverride('_method'));
 app.use(express.static('public'));
@@ -28,8 +59,15 @@ app.set('views', './src/views'); // Set the views directory
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(helmet());
+app.use(cors());app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https://files.nc.gov", "https://example.com"],
+      // Add other directives as needed
+    }
+  })
+);
 
 
 // Session configuration

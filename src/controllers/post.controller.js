@@ -4,30 +4,54 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 // Create a new post// src/controllers/post.controller.js
+
+const isValidImageUrl = (url) => {
+  const allowedDomains = ['files.nc.gov', 'example.com']; // Add trusted domains here
+  try {
+    const { hostname } = new URL(url);
+    return allowedDomains.includes(hostname);
+  } catch (error) {
+    return false;
+  }
+};
+
 const createPost = async (req, res) => {
   try {
-    const { content, imageUrl } = req.body;
+    // Check if content exists in req.body
+    const content = req.body.content;
+    
+    // For handling multipart form data with file upload
+    let imageUrl = null;
+    
+    if (req.file) {
+      // If image was uploaded through multer
+      imageUrl = `/uploads/${req.file.filename}`;
+    } else if (req.body.imageUrl) {
+      // If imageUrl was provided directly
+      if (!isValidImageUrl(req.body.imageUrl)) {
+        return res.status(400).json({ message: 'Invalid image URL' });
+      }
+      imageUrl = req.body.imageUrl;
+    }
+
     const userId = req.user.id;
 
-    // Validate input
     if (!content) {
       return res.status(400).json({ message: 'Post content is required' });
     }
 
-    // Create post
     await prisma.post.create({
       data: {
         content,
-        imageUrl: imageUrl || '', // Default to an empty string if no image URL is provided
+        imageUrl,
         userId,
-      }
+      },
     });
 
-    // Redirect back to the feed page
     res.redirect('/feed');
   } catch (error) {
     console.error('Error creating post:', error);
-    res.status(500).render('error', { message: 'Error creating post' });
+    res.status(500).json({ message: 'Error creating post' });
   }
 };
 // Get post by ID

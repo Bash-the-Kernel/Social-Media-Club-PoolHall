@@ -13,9 +13,9 @@
   </nav>
   <div class="profile">
     <h1>Your Feed</h1>
-    <form action="/api/posts" method="post">
+    <form action="/api/posts" method="post" enctype="multipart/form-data">
       <textarea name="content" placeholder="Write something..." required></textarea>
-      <input type="text" name="imageUrl" placeholder="Image URL (optional)">
+      <input type="file" name="image" accept="image/*">
       <button type="submit">Post</button>
     </form>
     <% if (posts.length > 0) { %>

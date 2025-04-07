@@ -1,7 +1,8 @@
-/* Modern Social Media CSS - Mobile-first Approach */
+/* Modern Social Media CSS - Mobile-first Approach with Purple-Orange Gradient */
 :root {
-  --primary-color: #4a7bff;
-  --primary-hover: #3562d8;
+  --primary-color: #9c27b0;  /* Purple */
+  --primary-hover: #7b1fa2;  /* Darker Purple */
+  --secondary-color: #ff9800; /* Orange */
   --text-color: #333;
   --text-light: #757575;
   --bg-color: #f8f9fa;
@@ -20,10 +21,12 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--bg-color);
+  background: linear-gradient(135deg, #9c27b0, #ff9800);
+  background-attachment: fixed;
   color: var(--text-color);
   line-height: 1.6;
   font-size: 16px;
+  min-height: 100vh;
 }
 
 h1, h2, h3 {
@@ -74,13 +77,22 @@ button:active, .btn:active {
 }
 
 .btn-text:hover {
-  background-color: rgba(74, 123, 255, 0.1);
+  background-color: rgba(156, 39, 176, 0.1);
   transform: none;
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+}
+
+.btn-secondary:hover {
+  background-color: #f57c00; /* Darker Orange */
 }
 
 /* Navigation */
 nav {
-  background-color: var(--card-bg);
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
@@ -94,7 +106,10 @@ nav {
 .nav-logo {
   font-weight: 700;
   font-size: 1.5rem;
-  color: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .nav-links {
@@ -115,7 +130,7 @@ nav {
   position: absolute;
   width: 100%;
   height: 2px;
-  background-color: var(--primary-color);
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   bottom: 0;
   left: 0;
 }
@@ -138,6 +153,10 @@ nav {
 /* Form Styles */
 form {
   margin: 1.5rem 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
 }
 
 .form-group {
@@ -166,21 +185,104 @@ form textarea:focus,
 form select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(74, 123, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(156, 39, 176, 0.2);
 }
 
 form button {
   margin-top: 0.5rem;
 }
 
+/* Login Page Styles */
+.login-container {
+  max-width: 450px;
+  margin: 3rem auto;
+  text-align: center;
+}
+
+.login-container h1 {
+  margin-bottom: 1.5rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.login-card {
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.login-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  background-color: white;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+  cursor: pointer;
+  width: 100%;
+}
+
+.oauth-btn:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
+}
+
+.oauth-btn.github {
+  background-color: #24292e;
+  color: white;
+  border: none;
+}
+
+.oauth-btn.google {
+  border-color: #4285F4;
+}
+
+.oauth-divider {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  color: var(--text-light);
+}
+
+.oauth-divider::before,
+.oauth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.oauth-divider span {
+  padding: 0 1rem;
+}
+
 /* Post Styles */
 .post {
-  background-color: var(--card-bg);
+  background-color: #333; /* Dark grey background for posts */
+  color: white; /* White text for better contrast */
+  backdrop-filter: blur(5px);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem; /* Add a gap between posts */
   transition: var(--transition);
+}
+
+.post + .post {
+  margin-top: 1.5rem; /* Add spacing between consecutive posts */
 }
 
 .post:hover {
@@ -269,23 +371,27 @@ form button {
   object-fit: cover;
 }
 
+/* Comment Box Styles */
 .comment-content {
-  flex: 1;
-  background-color: var(--bg-color);
+  background-color: #f5f5f5; /* Light grey background for comments */
+  color: #333; /* Dark text for readability */
   padding: 0.75rem;
   border-radius: var(--border-radius);
+  border: 1px solid var(--border-color); /* Add a subtle border */
 }
 
 .comment-author {
   font-weight: 600;
   margin-bottom: 0.25rem;
+  color: #555; /* Slightly darker text for the author */
 }
 
 /* Profile Styles */
 .profile {
   max-width: 800px;
   margin: 2rem auto;
-  background-color: var(--card-bg);
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(5px);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   overflow: hidden;
@@ -293,7 +399,7 @@ form button {
 
 .profile-cover {
   height: 200px;
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   position: relative;
 }
 
@@ -340,6 +446,40 @@ form button {
 .stat-label {
   font-size: 0.875rem;
   color: var(--text-light);
+}
+/* Compact Like/Unlike Buttons */
+.actions {
+  display: flex;
+  gap: 0.5rem; /* Add spacing between buttons */
+  margin-top: 0.5rem;
+}
+
+.actions form {
+  display: inline; /* Ensure forms are inline */
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove any default padding */
+  background: none; /* Remove background color */
+  border: none; /* Remove border */
+}
+
+.actions button {
+  padding: 0.4rem 0.8rem; /* Compact padding */
+  font-size: 0.875rem; /* Smaller font size */
+  border-radius: 5px; /* Rounded corners */
+  background-color: var(--primary-color); /* Use primary color */
+  color: white;
+  border: none; /* Remove border */
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.actions button:hover {
+  background-color: var(--primary-hover); /* Darker hover color */
+}
+
+.actions button:focus {
+  outline: none; /* Remove focus outline */
+  box-shadow: 0 0 0 2px rgba(156, 39, 176, 0.3); /* Add subtle focus shadow */
 }
 
 /* Media Queries for Responsive Design */
