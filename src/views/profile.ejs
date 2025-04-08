@@ -4,36 +4,69 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile</title>
-<link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body {
+      background: url('/images/stephen-collins-cRhNdY9-2Sc-unsplash.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
+  </style>
 </head>
 <body>
-<nav>
+  <nav>
     <a href="/feed">Feed</a>
+    <a href="/profile">My Profile</a>
     <a href="/api/auth/logout">Logout</a>
   </nav>
   <div class="profile">
     <img src="<%= user.profile.avatarUrl || '/default-avatar.png' %>" alt="Profile Picture">
-  <h1>Welcome, <%= user.username %>!</h1>
-  <p>Email: <%= user.email %></p>
-  <p>Bio: <%= user.profile.bio || "No bio available" %></p>
-  <p>Location: <%= user.profile.location || "No location available" %></p>
-  
-    <h2>Edit Profile</h2>
-  <form action="/profile" method="post">
-    <label for="bio">Bio:</label>
-    <textarea id="bio" name="bio"><%= user.profile.bio %></textarea>
+    
+    <% if (locals.loggedInUser && user.id !== loggedInUser.id) { %>
+      <!-- Viewing someone else's profile -->
+      <h1><%= user.username %>'s Profile</h1>
+    <% } else { %>
+      <!-- Viewing own profile -->
+      <h1>Welcome, <%= user.username %>!</h1>
+    <% } %>
+    
+    <p>Email: <%= user.email %></p>
+    <p>Bio: <%= user.profile.bio || "No bio available" %></p>
+    <p>Location: <%= user.profile.location || "No location available" %></p>
+    
+    <% if (locals.loggedInUser && user.id !== loggedInUser.id) { %>
+      <!-- Follow/Unfollow buttons for other users' profiles -->
+      <div class="follow-actions">
+        <% if (isFollowing) { %>
+          <form action="/api/follows/<%= user.id %>?_method=DELETE" method="POST">
+            <button type="submit">Unfollow</button>
+          </form>
+        <% } else { %>
+          <form action="/api/follows" method="POST">
+            <input type="hidden" name="followedId" value="<%= user.id %>">
+            <button type="submit">Follow</button>
+          </form>
+        <% } %>
+      </div>
+    <% } else { %>
+      <!-- Edit profile form for own profile -->
+      <h2>Edit Profile</h2>
+      <form action="/api/profile" method="post" enctype="multipart/form-data">
+        <label for="bio">Bio:</label>
+        <textarea id="bio" name="bio"><%= user.profile.bio %></textarea>
+        
         <label for="location">Location:</label>
-    <input type="text" id="location" name="location" value="<%= user.profile.location %>">
-        <label for="avatarUrl">Avatar URL:</label>
-    <input type="text" id="avatarUrl" name="avatarUrl" value="<%= user.profile.avatarUrl %>">
+        <input type="text" id="location" name="location" value="<%= user.profile.location %>">
+        
+        <label for="avatar">Upload Avatar:</label>
+        <input type="file" id="avatar" name="avatar" accept="image/*">
+        
         <button type="submit">Save Changes</button>
-  </form>
+      </form>
+    <% } %>
 
-  <br>
-  <!-- Navigation Link to Feed -->
-  <a href="/feed">Back to Feed</a>
-  <br>
-  <!-- Logout Link -->
-  <a href="/api/auth/logout">Logout</a>
+    <br>
+    <a href="/feed">Back to Feed</a>
+  </div>
 </body>
 </html>

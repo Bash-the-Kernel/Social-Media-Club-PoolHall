@@ -1,16 +1,37 @@
-/* Modern Social Media CSS - Mobile-first Approach with Purple-Orange Gradient */
+/* Enhanced Social Media CSS - Mobile-first with Improved Accessibility */
 :root {
-  --primary-color: #9c27b0;  /* Purple */
-  --primary-hover: #7b1fa2;  /* Darker Purple */
-  --secondary-color: #ff9800; /* Orange */
-  --text-color: #333;
-  --text-light: #757575;
+  /* Color palette adjusted for better contrast and colorblind accessibility */
+  --primary-color: #6200ee;  /* Deep Purple - better contrast ratio */
+  --primary-hover: #3700b3;  /* Darker Purple for hover states */
+  --secondary-color: #f57c00; /* Adjusted Orange for better visibility */
+  --text-color: #212121;     /* Darker text for better readability */
+  --text-light: #5f6368;     /* Adjusted to meet WCAG 2.1 AA standards */
   --bg-color: #f8f9fa;
   --card-bg: #ffffff;
-  --border-color: #e6e6e6;
+  --post-bg: #333333;        /* Dark background for posts - maintained from original */
+  --post-text: #ffffff;      /* White text for posts - ensuring visibility */
+  --border-color: #e0e0e0;
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   --border-radius: 8px;
   --transition: all 0.3s ease;
+  --focus-outline: 3px solid #1a73e8; /* High visibility focus indicator */
+  --error-color: #d32f2f;    /* Accessible red */
+}
+
+/* Dark Mode Theme - Will be applied when user prefers dark color scheme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #bb86fc; /* Light purple for dark themes */
+    --primary-hover: #9965f4;
+    --secondary-color: #ffab40; /* Brighter orange for dark themes */
+    --text-color: #e0e0e0;
+    --text-light: #bdbdbd;
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --post-bg: #262626;      /* Slightly lighter than the background for dark mode */
+    --post-text: #ffffff;    /* White text maintained for posts */
+    --border-color: #333333;
+  }
 }
 
 * {
@@ -21,18 +42,33 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: linear-gradient(135deg, #9c27b0, #ff9800);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   background-attachment: fixed;
   color: var(--text-color);
   line-height: 1.6;
   font-size: 16px;
   min-height: 100vh;
+  /* Improved text rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure proper text resizing */
+html {
+  font-size: 100%; /* Use percentage to respect user's browser settings */
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 90%; /* Slightly smaller on very small screens */
+  }
 }
 
 h1, h2, h3 {
   font-weight: 600;
   color: var(--text-color);
   margin-bottom: 0.75rem;
+  line-height: 1.2; /* Improved readability */
 }
 
 a {
@@ -43,9 +79,16 @@ a {
 
 a:hover {
   color: var(--primary-hover);
+  text-decoration: underline; /* Added underline for better accessibility */
 }
 
-/* Modern Button Styles */
+/* Enhanced focus styles for keyboard navigation */
+a:focus, button:focus, input:focus, textarea:focus, select:focus {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+/* Improved Button Styles with Accessibility */
 button, .btn {
   background-color: var(--primary-color);
   color: white;
@@ -59,6 +102,9 @@ button, .btn {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  /* Ensure buttons have a minimum touch target area for mobile */
+  min-height: 44px;
+  min-width: 44px;
 }
 
 button:hover, .btn:hover {
@@ -70,6 +116,12 @@ button:active, .btn:active {
   transform: translateY(0);
 }
 
+/* Provide a visible focus indicator that doesn't rely solely on color */
+button:focus-visible, .btn:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
 .btn-text {
   background: transparent;
   color: var(--primary-color);
@@ -77,23 +129,31 @@ button:active, .btn:active {
 }
 
 .btn-text:hover {
-  background-color: rgba(156, 39, 176, 0.1);
+  background-color: rgba(98, 0, 238, 0.1);
   transform: none;
 }
 
+/* Secondary button with improved contrast */
 .btn-secondary {
   background-color: var(--secondary-color);
 }
 
 .btn-secondary:hover {
-  background-color: #f57c00; /* Darker Orange */
+  background-color: #e65100; /* Darker Orange with better contrast */
 }
 
-/* Navigation */
+/* Disabled button state */
+button:disabled, .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Navigation with improved accessibility */
 nav {
-  background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -101,11 +161,22 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* Ensure minimal height for touch targets */
+  min-height: 60px;
+}
+
+@media (prefers-color-scheme: dark) {
+  nav {
+    background-color: rgba(30, 30, 30, 0.95);
+  }
 }
 
 .nav-logo {
   font-weight: 700;
   font-size: 1.5rem;
+  /* Avoid relying solely on color for the logo */
+  color: var(--primary-color);
+  /* Fallback for browsers that don't support background-clip */
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
   background-clip: text;
@@ -123,24 +194,74 @@ nav {
   font-weight: 500;
   position: relative;
   padding: 0.5rem;
+  /* Ensure touch target size */
+  min-height: 44px;
+  display: flex;
+  align-items: center;
 }
 
 .nav-links a:hover::after {
   content: '';
   position: absolute;
   width: 100%;
-  height: 2px;
+  height: 3px; /* Thicker for better visibility */
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   bottom: 0;
   left: 0;
 }
 
-/* Layout Containers */
+/* Mobile navigation menu */
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  
+  .nav-links {
+    position: fixed;
+    top: 60px;
+    right: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: calc(100vh - 60px);
+    background-color: var(--card-bg);
+    flex-direction: column;
+    padding: 1rem;
+    transition: right 0.3s ease;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .nav-links.active {
+    right: 0;
+  }
+  
+  .nav-links a {
+    width: 100%;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+}
+
+/* Layout Containers with Improved Responsiveness */
 .container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
 }
 
 .content-grid {
@@ -150,23 +271,55 @@ nav {
   padding: 1.5rem 0;
 }
 
-/* Form Styles */
+@media (min-width: 768px) {
+  .content-grid {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+}
+
+/* Form Styles with Enhanced Accessibility */
 form {
   margin: 1.5rem 0;
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
 }
 
+@media (prefers-color-scheme: dark) {
+  form {
+    background-color: rgba(30, 30, 30, 0.95);
+  }
+}
+
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  color: var(--text-color);
+}
+
+/* Added for screenreader-only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 form input, 
@@ -174,10 +327,12 @@ form textarea,
 form select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color); /* Thicker border for better visibility */
   border-radius: var(--border-radius);
   background-color: var(--card-bg);
+  color: var(--text-color);
   transition: var(--transition);
+  font-size: 1rem; /* Ensure readable font size */
 }
 
 form input:focus, 
@@ -185,11 +340,24 @@ form textarea:focus,
 form select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(156, 39, 176, 0.2);
+  box-shadow: 0 0 0 2px rgba(98, 0, 238, 0.2);
+}
+
+/* Form validation and error styles */
+.form-error {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+input.error, 
+textarea.error, 
+select.error {
+  border-color: var(--error-color);
 }
 
 form button {
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 }
 
 /* Login Page Styles */
@@ -197,20 +365,27 @@ form button {
   max-width: 450px;
   margin: 3rem auto;
   text-align: center;
+  padding: 0 1rem;
 }
 
 .login-container h1 {
   margin-bottom: 1.5rem;
   color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .login-card {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: var(--border-radius);
   padding: 2rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  .login-card {
+    background-color: rgba(30, 30, 30, 0.95);
+  }
 }
 
 .login-options {
@@ -228,16 +403,17 @@ form button {
   padding: 0.75rem;
   border-radius: var(--border-radius);
   font-weight: 500;
-  background-color: white;
+  background-color: var(--card-bg);
   color: var(--text-color);
   border: 1px solid var(--border-color);
   transition: var(--transition);
   cursor: pointer;
   width: 100%;
+  min-height: 44px; /* Accessible touch target */
 }
 
 .oauth-btn:hover {
-  background-color: #f5f5f5;
+  background-color: rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
 }
 
@@ -269,25 +445,25 @@ form button {
   padding: 0 1rem;
 }
 
-/* Post Styles */
+/* Post Styles with Dark Background from Original Design */
 .post {
-  background-color: #333; /* Dark grey background for posts */
-  color: white; /* White text for better contrast */
-  backdrop-filter: blur(5px);
+  background-color: var(--post-bg); /* Dark background for posts */
+  color: var(--post-text); /* White text for contrast */
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   padding: 1.5rem;
-  margin-bottom: 1.5rem; /* Add a gap between posts */
+  margin-bottom: 1.5rem;
   transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for definition */
 }
 
 .post + .post {
-  margin-top: 1.5rem; /* Add spacing between consecutive posts */
+  margin-top: 1.5rem;
 }
 
 .post:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .post-header {
@@ -310,29 +486,38 @@ form button {
 
 .post-author {
   font-weight: 600;
-  color: var(--text-color);
+  color: var(--post-text); /* Ensure visibility on dark background */
 }
 
 .post-time {
   font-size: 0.875rem;
-  color: var(--text-light);
+  color: rgba(255, 255, 255, 0.7); /* Lighter but still visible on dark */
 }
 
 .post-content {
   margin-bottom: 1rem;
+  color: var(--post-text); /* Ensure text is visible */
 }
 
 .post img {
   width: 100%;
   border-radius: var(--border-radius);
   margin: 0.75rem 0;
+  /* Add alt text handling for screen readers */
+  object-fit: cover;
+}
+
+/* Ensure images have appropriate alt text */
+.post img:not([alt]) {
+  outline: 2px solid var(--error-color);
 }
 
 .post-actions {
   display: flex;
   gap: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border on dark background */
+  flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .action-btn {
@@ -342,19 +527,20 @@ form button {
   padding: 0.5rem 0.75rem;
   border-radius: var(--border-radius);
   background: transparent;
-  color: var(--text-light);
+  color: rgba(255, 255, 255, 0.7); /* Lighter but still visible */
   font-weight: 500;
   transition: var(--transition);
+  min-height: 44px; /* Accessible touch target */
 }
 
 .action-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: var(--text-color);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 .post-comments {
   margin-top: 1.25rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 1.25rem;
 }
 
@@ -371,27 +557,28 @@ form button {
   object-fit: cover;
 }
 
-/* Comment Box Styles */
+/* Comment Box Styles - Lighter than the post background for contrast */
 .comment-content {
-  background-color: #f5f5f5; /* Light grey background for comments */
-  color: #333; /* Dark text for readability */
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--post-text);
   padding: 0.75rem;
   border-radius: var(--border-radius);
-  border: 1px solid var(--border-color); /* Add a subtle border */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex: 1;
 }
 
 .comment-author {
   font-weight: 600;
   margin-bottom: 0.25rem;
-  color: #555; /* Slightly darker text for the author */
+  color: white;
 }
 
-/* Profile Styles */
+/* Profile Styles - Preserve the dark purple background from original */
 .profile {
   max-width: 800px;
   margin: 2rem auto;
-  background-color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(5px);
+  background-color: rgba(143, 4, 124, 0.9); /* Preserve original purple */
+  color: white; /* Ensure text visibility */
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   overflow: hidden;
@@ -421,10 +608,11 @@ form button {
 .profile-name {
   font-size: 1.75rem;
   margin-bottom: 0.5rem;
+  color: white; /* Ensure visibility */
 }
 
 .profile-bio {
-  color: var(--text-light);
+  color: rgba(255, 255, 255, 0.8); /* Slightly dimmed but still visible */
   margin-bottom: 1.5rem;
 }
 
@@ -432,64 +620,110 @@ form button {
   display: flex;
   gap: 2rem;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .stat {
   text-align: center;
+  min-width: 80px;
 }
 
 .stat-value {
   font-size: 1.25rem;
   font-weight: 700;
+  color: white; /* Ensure visibility */
 }
 
 .stat-label {
   font-size: 0.875rem;
-  color: var(--text-light);
+  color: rgba(255, 255, 255, 0.8); /* Slightly dimmed but still visible */
 }
-/* Compact Like/Unlike Buttons */
+
+/* Compact Like/Unlike Buttons with Better Accessibility */
 .actions {
   display: flex;
-  gap: 0.5rem; /* Add spacing between buttons */
+  gap: 0.5rem;
   margin-top: 0.5rem;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .actions form {
-  display: inline; /* Ensure forms are inline */
-  margin: 0; /* Remove any default margin */
-  padding: 0; /* Remove any default padding */
-  background: none; /* Remove background color */
-  border: none; /* Remove border */
+  display: inline;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
 }
 
 .actions button {
-  padding: 0.4rem 0.8rem; /* Compact padding */
-  font-size: 0.875rem; /* Smaller font size */
-  border-radius: 5px; /* Rounded corners */
-  background-color: var(--primary-color); /* Use primary color */
+  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem;
+  border-radius: 5px;
+  background-color: var(--primary-color);
   color: white;
-  border: none; /* Remove border */
+  border: none;
   cursor: pointer;
   transition: var(--transition);
+  min-height: 32px; /* Smaller but still accessible */
 }
 
 .actions button:hover {
-  background-color: var(--primary-hover); /* Darker hover color */
+  background-color: var(--primary-hover);
 }
 
 .actions button:focus {
-  outline: none; /* Remove focus outline */
-  box-shadow: 0 0 0 2px rgba(156, 39, 176, 0.3); /* Add subtle focus shadow */
+  outline: var(--focus-outline);
+  outline-offset: 2px;
 }
 
-/* Media Queries for Responsive Design */
+/* Skip to content link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary-color);
+  color: white;
+  padding: 8px;
+  z-index: 1001;
+  transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Links inside posts need a different color for visibility */
+.post a {
+  color: #bb86fc; /* Light purple for dark backgrounds */
+  text-decoration: underline; /* Always underline for better visibility */
+}
+
+.post a:hover {
+  color: #d7aefb; /* Lighter purple on hover */
+}
+
+/* Responsive Typography */
 @media (min-width: 768px) {
-  .content-grid {
-    grid-template-columns: 1fr 2fr;
+  h1 {
+    font-size: 2.25rem;
   }
   
-  nav {
-    padding: 0.75rem 2rem;
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+  }
+  
+  .profile-cover {
+    height: 250px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .post {
+    padding: 2rem;
   }
   
   .profile-cover {
@@ -497,12 +731,35 @@ form button {
   }
 }
 
-@media (min-width: 1024px) {
-  .content-grid {
-    grid-template-columns: 1fr 2fr 1fr;
+/* High contrast mode */
+@media (forced-colors: active) {
+  :root {
+    --primary-color: HighlightText;
+    --primary-hover: Highlight;
+    --border-color: ButtonBorder;
   }
   
-  .post {
-    padding: 2rem;
+  button, .btn {
+    border: 1px solid ButtonBorder;
+  }
+  
+  .post, .profile, .login-card {
+    border: 1px solid ButtonBorder;
+  }
+}
+
+/* Ensure proper text spacing for readability */
+p, li {
+  margin-bottom: 1rem;
+  max-width: 70ch; /* Limit line length for better readability */
+}
+
+/* Animations - respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

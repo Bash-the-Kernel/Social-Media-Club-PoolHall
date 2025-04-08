@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Post Details</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body {
+      background: url('/images/stephen-collins-cRhNdY9-2Sc-unsplash.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <nav>
@@ -23,8 +30,7 @@
         <input type="hidden" name="postId" value="<%= post.id %>">
         <button type="submit">Like</button>
       </form>
-      <form action="/api/likes/<%= post.id %>" method="post">
-        <input type="hidden" name="_method" value="DELETE">
+      <form action="/api/likes/<%= post.id %>?_method=DELETE" method="POST">
         <button type="submit">Unlike</button>
       </form>
     </div>

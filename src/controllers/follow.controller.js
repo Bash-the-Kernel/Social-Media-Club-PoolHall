@@ -56,10 +56,16 @@ const sendFollowRequest = async (req, res) => {
       }
     });
     
-    return res.status(201).json({ 
-      message: 'Follow request sent',
-      follow: followRequest
-    });
+    // Check if this is an AJAX request or a form submission
+    if (req.xhr) {
+      return res.status(201).json({ 
+        message: 'Follow request sent',
+        follow: followRequest
+      });
+    } else {
+      // Redirect back to the profile page
+      return res.redirect(`/profile/${followedIdNum}`);
+    }
   } catch (error) {
     console.error('Error sending follow request:', error);
     return res.status(500).json({ message: 'Server error' });
@@ -96,10 +102,16 @@ const acceptFollowRequest = async (req, res) => {
       data: { status: 'accepted' }
     });
     
-    return res.json({
-      message: 'Follow request accepted',
-      follow: updatedFollow
-    });
+    // Check if this is an AJAX request or a form submission
+    if (req.xhr) {
+      return res.json({
+        message: 'Follow request accepted',
+        follow: updatedFollow
+      });
+    } else {
+      // Redirect back to the profile page
+      return res.redirect(`/profile/${followRequest.followerId}`);
+    }
   } catch (error) {
     console.error('Error accepting follow request:', error);
     return res.status(500).json({ message: 'Server error' });
@@ -130,9 +142,15 @@ const rejectFollowRequest = async (req, res) => {
       where: { id: Number(followId) }
     });
     
-    return res.json({
-      message: 'Follow request rejected'
-    });
+    // Check if this is an AJAX request or a form submission
+    if (req.xhr) {
+      return res.json({
+        message: 'Follow request rejected'
+      });
+    } else {
+      // Redirect back to the profile page
+      return res.redirect(`/profile/${followRequest.followerId}`);
+    }
   } catch (error) {
     console.error('Error rejecting follow request:', error);
     return res.status(500).json({ message: 'Server error' });
@@ -164,9 +182,15 @@ const unfollowUser = async (req, res) => {
       where: { id: follow.id }
     });
     
-    return res.json({
-      message: 'Unfollowed user successfully'
-    });
+    // Check if this is an AJAX request or a form submission
+    if (req.xhr) {
+      return res.json({
+        message: 'Unfollowed user successfully'
+      });
+    } else {
+      // Redirect back to the profile page
+      return res.redirect(`/profile/${userId}`);
+    }
   } catch (error) {
     console.error('Error unfollowing user:', error);
     return res.status(500).json({ message: 'Server error' });
@@ -266,4 +290,3 @@ module.exports = {
   getFollowers,
   getFollowing
 };
-

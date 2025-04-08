@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Feed</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body {
+      background: url('/images/stephen-collins-cRhNdY9-2Sc-unsplash.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <nav>
@@ -21,7 +28,9 @@
     <% if (posts.length > 0) { %>
       <% posts.forEach(post => { %>
         <div class="post">
-          <h2><%= post.user.username %></h2>
+          <h2>
+            <a href="/profile/<%= post.user.id %>"><%= post.user.username %></a>
+          </h2>
           <p><%= post.content %></p>
           <% if (post.imageUrl) { %>
             <img src="<%= post.imageUrl %>" alt="Post Image">
@@ -32,8 +41,7 @@
               <input type="hidden" name="postId" value="<%= post.id %>">
               <button type="submit">Like</button>
             </form>
-            <form action="/api/likes/<%= post.id %>" method="post">
-              <input type="hidden" name="_method" value="DELETE">
+            <form action="/api/likes/<%= post.id %>?_method=DELETE" method="POST">
               <button type="submit">Unlike</button>
             </form>
           </div>

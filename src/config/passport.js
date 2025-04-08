@@ -28,30 +28,45 @@ passport.use(new LocalStrategy(
     }
   }
 ));
-
 // GitHub Strategy
 passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: '/api/auth/github/callback'
+  callbackURL: '/api/auth/github/callback',  // Updated to match your GitHub settings
+  scope: ['user:email']  // Make sure this scope is requested
 }, async (accessToken, refreshToken, profile, done) => {
   try {
-    const email = profile.emails[0].value;
+    // Handle case when email might not be available
+    const email = profile.emails && profile.emails[0] ? profile.emails[0].value : `${profile.username}@github.com`;
     const username = profile.username;
 
-    let user = await prisma.user.findUnique({ where: { email } });
+    let user = await prisma.user.findUnique({ 
+      where: { 
+        email 
+      }
+    });
+    
     if (!user) {
+      // Create a random password for OAuth users
+      const randomPassword = require('crypto').randomBytes(16).toString('hex');
+      
       user = await prisma.user.create({
         data: {
           username,
           email,
-          profile: { create: { avatarUrl: profile.photos[0].value } }
+          password: await bcrypt.hash(randomPassword, 10), // Add password field
+          profile: { 
+            create: { 
+              avatarUrl: profile.photos && profile.photos[0] ? profile.photos[0].value : null 
+            } 
+          }
         }
       });
     }
 
     return done(null, user);
   } catch (error) {
+    console.error("GitHub auth error:", error);
     return done(error);
   }
 }));
@@ -60,25 +75,38 @@ passport.use(new GitHubStrategy({
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: '/api/auth/google/callback'
+  callbackURL: '/api/auth/google/callback',  // Updated to match your Google settings
 }, async (accessToken, refreshToken, profile, done) => {
   try {
-    const email = profile.emails[0].value;
-    const username = profile.displayName;
+    const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+    if (!email) {
+      return done(new Error("No email found in Google profile"));
+    }
+    
+    const username = profile.displayName || email.split('@')[0];
 
     let user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
+      // Create a random password for OAuth users
+      const randomPassword = require('crypto').randomBytes(16).toString('hex');
+      
       user = await prisma.user.create({
         data: {
           username,
           email,
-          profile: { create: { avatarUrl: profile.photos[0].value } }
+          password: await bcrypt.hash(randomPassword, 10), // Add password field
+          profile: { 
+            create: { 
+              avatarUrl: profile.photos && profile.photos[0] ? profile.photos[0].value : null 
+            } 
+          }
         }
       });
     }
 
     return done(null, user);
   } catch (error) {
+    console.error("Google auth error:", error);
     return done(error);
   }
 }));

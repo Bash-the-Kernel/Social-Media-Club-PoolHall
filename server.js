@@ -9,6 +9,7 @@ const likeRoutes = require('./src/routes/like.routes');
 const commentRoutes = require('./src/routes/comment.routes');
 const postRoutes = require('./src/routes/post.routes');
 const followRoutes = require('./src/routes/follow.routes');
+require('dotenv').config();
 
 const prisma = new PrismaClient();
 const app = express();
@@ -29,14 +30,33 @@ const storage = multer.diskStorage({
   }
 });
 
+
+
 const upload = multer({ storage });
 
 const fs = require('fs');
+
+
+const avatarStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, 'public/uploads/avatars');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+
+const avatarUpload = multer({ storage: avatarStorage });
 
 const uploadDir = path.join(__dirname, 'public/uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
+const profileRoutes = require('./src/routes/profile.routes');
 
 // Add an upload route
 app.post('/api/uploads', upload.single('image'), (req, res) => {
@@ -46,6 +66,7 @@ app.post('/api/uploads', upload.single('image'), (req, res) => {
   const imageUrl = `/uploads/${req.file.filename}`;
   res.json({ imageUrl });
 });
+// Add this with your other route uses
 
 // Enable method override for forms
 app.use(methodOverride('_method'));
@@ -96,6 +117,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
+app.use('/api/profile', profileRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/likes', likeRoutes);
 app.use('/api/comments', commentRoutes);
@@ -115,7 +137,52 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
   res.render('register');
 });
+app.get('/profile/:id', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.redirect('/login');
+  }
 
+  try {
+    const profileUserId = parseInt(req.params.id);
+    const loggedInUserId = req.user.id;
+
+    // Redirect to /profile if the logged-in user clicks on their own profile link
+    if (profileUserId === loggedInUserId) {
+      return res.redirect('/profile');
+    }
+
+    // Fetch the user with their profile
+    const user = await prisma.user.findUnique({
+      where: { id: profileUserId },
+      include: {
+        profile: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).render('error', { message: 'User not found' });
+    }
+
+    // Check if the logged-in user is following this user
+    const isFollowing = await prisma.follow.findUnique({
+      where: {
+        followerId_followedId: {
+          followerId: loggedInUserId,
+          followedId: profileUserId,
+        },
+      },
+    });
+
+    res.render('profile', { 
+      user, 
+      isFollowing: !!isFollowing, 
+      loggedInUser: req.user 
+    });
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    res.status(500).render('error', { message: 'Error fetching profile' });
+  }
+});
 
 app.get('/profile', async (req, res) => {
   if (!req.isAuthenticated()) {
@@ -153,7 +220,7 @@ app.get('/profile', async (req, res) => {
     res.status(500).render('error', { message: 'Error fetching profile' });
   }
 });
-
+/*
 app.post('/profile', async (req, res) => {
   if (!req.isAuthenticated()) {
     return res.redirect('/login');
@@ -177,7 +244,7 @@ app.post('/profile', async (req, res) => {
     console.error('Error updating profile:', error);
     res.status(500).render('error', { message: 'Error updating profile' });
   }
-});
+});*/
 app.get('/feed', async (req, res) => {
   if (!req.isAuthenticated()) {
     return res.redirect('/login');
@@ -189,6 +256,7 @@ app.get('/feed', async (req, res) => {
       include: {
         user: {
           select: {
+            id: true,  // Add this line to include user ID
             username: true,
             profile: {
               select: {
