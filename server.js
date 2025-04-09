@@ -98,7 +98,9 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'lax', // Add this
+    domain: process.env.NODE_ENV === 'production' ? '.up.railway.app' : undefined // Add this
   }
 }));
 
