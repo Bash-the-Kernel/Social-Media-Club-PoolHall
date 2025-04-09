@@ -75,7 +75,9 @@ passport.use(new GitHubStrategy({
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: '/api/auth/google/callback',  // Updated to match your Google settings
+  callbackURL: process.env.NODE_ENV === 'production' 
+    ? 'https://social-media-club-poolhall-production.up.railway.app/api/auth/google/callback'
+    : '/api/auth/google/callback',
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;

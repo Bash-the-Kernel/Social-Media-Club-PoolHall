@@ -95,12 +95,12 @@ app.use(cors());app.use(
 app.use(session({
   secret: process.env.SESSION_SECRET || 'default_secret_change_in_production',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true, // Changed to true to help with session establishment
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: 'lax', // Add this
-    domain: process.env.NODE_ENV === 'production' ? '.up.railway.app' : undefined // Add this
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: 'lax'
+    // Remove the domain setting as it might be causing issues
   }
 }));
 
