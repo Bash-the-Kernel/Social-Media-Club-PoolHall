@@ -78,6 +78,7 @@ passport.use(new GoogleStrategy({
   callbackURL: process.env.NODE_ENV === 'production' 
     ? 'https://social-media-club-poolhall-production.up.railway.app/api/auth/google/callback'
     : '/api/auth/google/callback',
+  proxy: true // Add this line to handle proxied requests correctly
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;

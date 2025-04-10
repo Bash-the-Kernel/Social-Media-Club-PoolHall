@@ -95,13 +95,13 @@ app.use(cors());app.use(
 app.use(session({
   secret: process.env.SESSION_SECRET || 'default_secret_change_in_production',
   resave: false,
-  saveUninitialized: true, // Changed to true to help with session establishment
+  saveUninitialized: true, // Changed to true
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000,
-    sameSite: 'lax'
-    // Remove the domain setting as it might be causing issues
-  }
+    secure: false, // Set to false for now to rule out HTTPS issues
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    httpOnly: true // Add this for security
+  },
+  proxy: true // Add this for Railway's proxy setup
 }));
 
 
@@ -117,6 +117,16 @@ app.use((req, res, next) => {
 // Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Add this right after your session and passport initialization
+app.use((req, res, next) => {
+  console.log('Session ID:', req.sessionID);
+  console.log('Authenticated:', req.isAuthenticated());
+  if (req.user) {
+    console.log('User ID:', req.user.id);
+  }
+  next();
+});
 
 // Routes
 app.use('/api/profile', profileRoutes);
