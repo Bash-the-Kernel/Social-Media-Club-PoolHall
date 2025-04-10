@@ -26,7 +26,7 @@ Pool House Social Media is a full-stack social media application where users can
 
 ---
 
-<img alt="Screenshot of Pool House Social Media" src="/home/jemcwilliams/Social-Media-Club-PoolHall/Screenshot_2025-04-10_16-07-03.png">
+<img alt="Screenshot of Pool House Social Media" src="Screenshot_2025-04-10_16-07-03.png">
 
 ## **Installation**
 
