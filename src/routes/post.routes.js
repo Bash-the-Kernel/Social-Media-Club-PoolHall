@@ -15,12 +15,28 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage });
+// File filter to validate image uploads
+const fileFilter = (req, file, cb) => {
+  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  if (allowedMimeTypes.includes(file.mimetype)) {
+    cb(null, true); // Accept the file
+  } else {
+    cb(new Error('Invalid file type. Only JPEG, PNG, GIF, and WEBP are allowed.'), false); // Reject the file
+  }
+};
+
+const upload = multer({ storage, fileFilter });
 
 const router = express.Router();
 
 // Post routes
-router.post('/', ensureAuthenticated, upload.single('image'), postController.createPost);
+router.post('/', ensureAuthenticated, upload.single('image'), (req, res, next) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded or invalid file type.' });
+  }
+  next();
+}, postController.createPost);
+
 router.get('/feed', ensureAuthenticated, postController.getFeedPosts);
 router.get('/user/:userId', allowGuest, postController.getUserPosts);
 router.get('/:id', allowGuest, postController.getPostById);
