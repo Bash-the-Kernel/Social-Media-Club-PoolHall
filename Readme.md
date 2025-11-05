@@ -1,6 +1,6 @@
 # Pool House Social Media
 
-Pool House Social Media is a full-stack social media application where users can create posts, like/unlike posts, comment, follow/unfollow other users, and manage their profiles. The app supports OAuth login via GitHub and Google.
+Pool House Social Media is a full-stack, web-based social media application where users can create posts, like/unlike posts, comment, follow/unfollow other users, and manage their profiles. The app supports OAuth login via GitHub and Google.
 
 ---
 
